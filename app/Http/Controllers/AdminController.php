@@ -69,38 +69,42 @@ class AdminController extends Controller
 }
 
 
-    public function brand_update(Request $request)
-    {
-        $request->validate(
-            [
-                'name' => 'required',
-                'slug' => 'required|unique:brands,slug',
-                'image' => 'nullable|mimes:jpg,png,jpeg,webp|max:2048'
-            ]
-        );
+public function brand_update(Request $request)
+{
+    // Validate the incoming request data
+    $request->validate([
+        'name' => 'required',
+        'slug' => 'required|unique:brands,slug,' . $request->id,
+        'image' => 'nullable|mimes:jpg,png,jpeg,webp|max:2048'
+    ]);
 
-        $brand = Brand::find($request->$id);
-        $brand->name = $request->name;
-        $brand->slug = Str::slug($request->name);
+    // Find the brand by ID from the request
+    $brand = Brand::findOrFail($request->id);  // Corrected to access id from the request
 
-        // Check if the image is uploaded
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $file_extension = $image->extension();
-            $file_name = Carbon::now()->timestamp . '.' . $file_extension;
+    // Update brand name and slug
+    $brand->name = $request->name;
+    $brand->slug = Str::slug($request->name);
 
-            // Generate the brand thumbnail
-            $this->generatebrandthumbail($image, $file_name);
+    // Check if the image is uploaded
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $file_extension = $image->extension();
+        $file_name = Carbon::now()->timestamp . '.' . $file_extension;
 
-            // Set the image field
-            $brand->image = $file_name;
-        }
+        // Generate the brand thumbnail (assuming this method exists in the controller)
+        $this->generatebrandthumbail($image, $file_name);
 
-        // Save the brand
-        $brand->save();
-
-        return redirect()->route('admin.brands')->with('status', 'Brand Updated successfully');
+        // Set the image field
+        $brand->image = $file_name;
     }
+
+    // Save the brand
+    $brand->save();
+
+    // Redirect with a success message
+    return redirect()->route('admin.brands')->with('status', 'Brand updated successfully');
+}
+
 
     public function generatebrandthumbail($image, $imagename)
     {
