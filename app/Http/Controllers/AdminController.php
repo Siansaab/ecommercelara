@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -172,6 +173,51 @@ public function brand_update(Request $request)
         return redirect()->route('admin.category')->with('status', 'Category added successfully');
     }
 
+
+    public function category_edit($id)
+    {
+        $category = Category::findOrFail($id);
+        return view('admin.category-edit', compact('category'));
+    }
+    
+    
+    public function category_update(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:categories,slug,' . $request->id,
+            'image' => 'nullable|mimes:jpg,png,jpeg,webp|max:2048'
+        ]);
+    
+        // Find the brand by ID from the request
+        $category = Category::findOrFail($request->id);  // Corrected to access id from the request
+    
+        // Update brand name and slug
+        $category->name = $request->name;
+        $category->slug = Str::slug($request->name);
+    
+        // Check if the image is uploaded
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $file_extension = $image->extension();
+            $file_name = Carbon::now()->timestamp . '.' . $file_extension;
+    
+            // Generate the brand thumbnail (assuming this method exists in the controller)
+            $this->generatecategorythumbail($image, $file_name);
+    
+            // Set the image field
+            $category->image = $file_name;
+        }
+    
+        // Save the brand
+        $category->save();
+    
+        // Redirect with a success message
+        return redirect()->route('admin.category')->with('status', 'category updated successfully');
+    }
+    
+
     public function generatecategorythumbail($image, $imagename)
     {
         $destinationpath = public_path('uploads/category');
@@ -182,9 +228,20 @@ public function brand_update(Request $request)
         })->save($destinationpath . '/' . $imagename);
     }
 
+    public function category_delete($id){
+        $category = Category::findOrFail($id); 
+        if(File::exists(public_path('uploads/category').'/'.$category->image))
+        {
+            File::delete(public_path('uploads/category').'/'.$category->image);
+        } // Corrected to access id from the request
+        $category->delete();
+        return redirect()->route('admin.category')->with("status",'category has been Delete Successfully');
+
+    }
+
     public function products()
     {
-        // $products = products::orderBy('id', 'DESC')->paginate(10);
+        $products = Product::orderBy('id','DESC')->paginate(10);
         return view('admin.products');
     }
 

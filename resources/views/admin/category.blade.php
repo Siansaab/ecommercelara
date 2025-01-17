@@ -66,12 +66,14 @@
                             <td><a href="#" target="_blank">2</a></td>
                             <td>
                                 <div class="list-icon-function">
-                                    <a href="#">
+                                    <a href="{{ route('admin.category.edit',['id' => $cat->id])}}">
                                         <div class="item edit">
                                             <i class="icon-edit-3"></i>
                                         </div>
                                     </a>
-                                    <form action="#" method="POST">
+                                    <form action="{{ route('admin.category.delete', ['id' => $cat->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
                                         <div class="item text-danger delete">
                                             <i class="icon-trash-2"></i>
                                         </div>
@@ -86,9 +88,32 @@
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-
+                {{ $cat->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 </div>
+
+@push('script')
+<script>
+    $(function(){
+        $('.delete').on('click', function(e){
+            e.preventDefault();
+            var form = $(this).closest('form');
+            swal({
+                title: "Are you sure?",
+                text: "You want to delete the records?",
+                icon: 'warning',
+                buttons: ['No', 'Yes'],
+                dangerMode: true,
+            }).then(function(result){
+                if (result) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+    
+@endpush
 @endsection
