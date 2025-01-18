@@ -32,7 +32,7 @@
                         </div>
                     </form>
                 </div>
-                <a class="tf-button style-1 w208" href="add-product.html"><i
+                <a class="tf-button style-1 w208" href="{{ route('admin.product-add')}}"><i
                         class="icon-plus"></i>Add new</a>
             </div>
             <div class="table-responsive">
@@ -60,7 +60,7 @@
                             <td>6</td>
                             <td class="pname">
                                 <div class="image">
-                                    <img src="{{asset('uploads/product/thumbails')}}/{{ $product->image }}" alt="" class="image">
+                                    <img src="{{asset('uploads/products/thumbails')}}/{{ $product->image }}" alt="" class="image">
                                 </div>
                                 <div class="name">
                                     <a href="#" class="body-title-2">{{ $product->name }}</a>
@@ -102,7 +102,7 @@
 
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-                {{ $brands->links('pagination::bootstrap-5') }}
+                {{ $products->links('pagination::bootstrap-5') }}
 
             </div>
         </div>
