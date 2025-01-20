@@ -36,7 +36,9 @@
                         class="icon-plus"></i>Add new</a>
             </div>
             <div class="table-responsive">
-
+                @if(Session::has('status'))
+                <p class ='alert alert-success'>{{ Session::get('status') }}</p>
+                @endif
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -70,8 +72,8 @@
                             <td>{{ $product->regular_price }}</td>
                             <td>{{ $product->sale_price }}</td>
                             <td>{{ $product->sku }}</td>
-                            <td>{{ $product->$category->name }}</td>
-                            <td>{{ $product->$brand->name }}</td>
+                            <td>{{ $product->category->name }}</td>
+                            <td>{{ $product->brand->name }}</td>
                             <td>{{ $product->feature == 0 ? "No":"Yes" }}</td>
                             <td>{{ $product->stock_status }}</td>
                             <td>{{ $product->quantity }}</td>
@@ -82,7 +84,7 @@
                                             <i class="icon-eye"></i>
                                         </div>
                                     </a>
-                                    <a href="#">
+                                    <a href="{{ route('admin.product.edit',['id' => $product->id])}}">
                                         <div class="item edit">
                                             <i class="icon-edit-3"></i>
                                         </div>
