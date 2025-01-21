@@ -372,12 +372,14 @@
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="assets/images/products/product_1.jpg" width="330"
-                          height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                      <a href="details.html"><img loading="lazy" src="{{asset('uploads/products')}}/{{$item->image}}" width="330"
+                          height="400" alt="{{$item->name}}" class="pc__img"></a>
                     </div>
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="assets/images/products/product_1-1.jpg"
-                          width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                      @foreach(explode(",",$item->images) as $gallery)
+                      <a href="details.html"><img loading="lazy" src="{{asset('uploads/products')}}/{{$gallery}}"
+                          width="330" height="400" alt="{{$item->name}}" class="pc__img"></a>
+                          @endforeach
                     </div>
                   </div>
                   <span class="pc__img-prev"><svg width="7" height="11" viewBox="0 0 7 11"
