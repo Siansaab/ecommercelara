@@ -29,8 +29,10 @@
                 </ul>
             </div>
             <!-- form-add-product -->
-            <form class="tf-section-2 form-add-product" method="POST" enctype="multipart/form-data" action=" ">
+            <form class="tf-section-2 form-add-product" method="POST" enctype="multipart/form-data" action="{{ route('admin.product.update')}}">
                 @csrf
+                @method('PUT')
+                <input type="hidden" name='id' value="{{ $product->id }}">
                 <div class="wg-box">
                     <!-- Product Name -->
                     <fieldset class="name">
@@ -200,7 +202,7 @@
                 </div>
             
                 <!-- Submit Button -->
-                <button class="tf-button w-full" type="submit">Add Product</button>
+                <button class="tf-button w-full" type="submit">update Product</button>
             </form>
             
             <!-- /form-add-product -->

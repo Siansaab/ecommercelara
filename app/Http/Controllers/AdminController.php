@@ -346,6 +346,114 @@ public function product_edit($id)
     return view('admin.product-edit', compact('product','categories','brands'));
 }
 
+public function product_update(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'slug' => 'required|unique:products,slug,' . $request->id,
+        'short_description' => 'required',
+        'description' => 'required',
+        'regular_price' => 'required',
+        'sale_price' => 'required',
+        'sku' => 'required',
+        'stock_status' => 'required',
+        'featured' => 'required',
+        'image' => 'nullable|mimes:jpg,png,jpeg,webp|max:2048',
+        'quantity' => 'required',
+        'category_id' => 'required',
+        'brand_id' => 'required',
+    ]);
+
+    $product = Product::find($request->id);
+    $product->name = $request->name;
+    $product->slug = Str::slug($request->slug);
+    $product->short_description = $request->short_description;
+    $product->description = $request->description;
+    $product->regular_price = $request->regular_price;
+    $product->sale_price = $request->sale_price;
+    $product->sku = $request->sku;
+    $product->stock_status = $request->stock_status;
+    $product->featured = $request->featured;
+    $product->category_id = $request->category_id;
+    $product->brand_id = $request->brand_id;
+
+    $current_timestamp = Carbon::now()->timestamp;
+
+    // Process the main image
+    if ($request->hasFile('image')) {
+        if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
+            File::delete(public_path('uploads/products') . '/' . $product->image);
+        }
+        if (File::exists(public_path('uploads/products/thumbails') . '/' . $product->image)) {
+            File::delete(public_path('uploads/products/thumbails') . '/' . $product->image);
+        }
+        $image = $request->file('image');
+        $imageName = $current_timestamp . '.' . $image->extension();
+        $this->generateproductthumbailImage($image, $imageName);
+        $product->image = $imageName;
+    }
+
+    // Handle gallery images
+    $gallery_arr = [];
+    $gallery_images = "";
+    $counter = 1;
+
+    if ($request->hasFile('images')) {
+        foreach (explode(',', $product->images) as $ofile) {
+            if (File::exists(public_path('uploads/products') . '/' . $ofile)) {
+                File::delete(public_path('uploads/products') . '/' . $ofile);
+            }
+            if (File::exists(public_path('uploads/products/thumbails') . '/' . $ofile)) {
+                File::delete(public_path('uploads/products/thumbails') . '/' . $ofile);
+            }
+        }
+
+        $allowedfileextension = ['jpg', 'jpeg', 'png', 'webp'];
+        $files = $request->file('images');
+        foreach ($files as $file) {
+            $gextension = $file->getClientOriginalExtension();
+            $gcheck = in_array($gextension, $allowedfileextension);
+            if ($gcheck) {
+                $gfileName = $current_timestamp . "-" . $counter . "." . $gextension;
+                $this->generateproductthumbailImage($file, $gfileName);
+                array_push($gallery_arr, $gfileName);
+                $counter++;
+            }
+        }
+        $gallery_images = implode(',', $gallery_arr);
+        $product->images = $gallery_images; // Update gallery images
+    } else {
+        $product->images = $product->images; // Retain existing images
+    }
+
+    $product->save();
+
+    return redirect()->route('admin.products')->with('status', 'Product has been updated successfully');
+}
+
+public function product_delete($id)
+{
+    $product = Product::find($id);
+    if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
+        File::delete(public_path('uploads/products') . '/' . $product->image);
+    }
+    if (File::exists(public_path('uploads/products/thumbails') . '/' . $product->image)) {
+        File::delete(public_path('uploads/products/thumbails') . '/' . $product->image);
+    }
+
+    foreach (explode(',', $product->images) as $ofile) {
+        if (File::exists(public_path('uploads/products') . '/' . $ofile)) {
+            File::delete(public_path('uploads/products') . '/' . $ofile);
+        }
+        if (File::exists(public_path('uploads/products/thumbails') . '/' . $ofile)) {
+            File::delete(public_path('uploads/products/thumbails') . '/' . $ofile);
+        }
+    }
+
+    $product->delete(); 
+    return redirect()->route('admin.products')->with('status', 'Product has been delete successfully');                                                                        
+}
+
 
 
     

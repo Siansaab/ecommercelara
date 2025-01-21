@@ -88,7 +88,7 @@
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-                {{ $cat->links('pagination::bootstrap-5') }}
+                {{ $Category->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Shopcontroler;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\authadmin;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,11 @@ Route::middleware(['auth',authadmin::class])->group(function(){
     Route::get('admin/products/add',[AdminController::class,'add_products'])->name('admin.product-add');
     Route::post('/admin/products/store/', [AdminController::class, 'product_store'])->name('admin.product.store');
     Route::get('/admin/products/edit/{id}', [AdminController::class, 'product_edit'])->name('admin.product.edit');
+    Route::put('/admin/products/update/', [AdminController::class, 'product_update'])->name('admin.product.update');
+    Route::delete('/admin/products/{id}/delete', [AdminController::class, 'product_delete'])->name('admin.product.delete');
+    //products
 });
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/shop', [Shopcontroler::class, 'index'])->name('shop.index');
