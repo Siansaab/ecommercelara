@@ -40,6 +40,7 @@ return [
     */
 
     'debug' => (bool) env('APP_DEBUG', false),
+'Cart' => Surfsidemedia\Shoppingcart\Facades\Cart::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +53,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+   'url' => env('APP_URL', 'http://localhost/ecommercelara/public'),
+
 
     /*
     |--------------------------------------------------------------------------

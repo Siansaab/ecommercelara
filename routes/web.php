@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Shopcontroler;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\authadmin;
@@ -40,3 +41,7 @@ Route::middleware(['auth',authadmin::class])->group(function(){
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/shop', [Shopcontroler::class, 'index'])->name('shop.index');
+Route::get('/shop/{product_slug}', [Shopcontroler::class, 'product_details'])->name('shop.product.details');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'index'])->name('cart.add');

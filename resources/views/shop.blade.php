@@ -372,12 +372,12 @@
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="{{asset('uploads/products')}}/{{$item->image}}" width="330"
+                      <a href=""><img loading="lazy" src="{{asset('uploads/products')}}/{{$item->image}}" width="330"
                           height="400" alt="{{$item->name}}" class="pc__img"></a>
                     </div>
                     <div class="swiper-slide">
                       @foreach(explode(",",$item->images) as $gallery)
-                      <a href="details.html"><img loading="lazy" src="{{asset('uploads/products')}}/{{$gallery}}"
+                      <a href="{{ route('shop.product.details',['product_slug' => $item->slug])}}"><img loading="lazy" src="{{asset('uploads/products')}}/{{$gallery}}"
                           width="330" height="400" alt="{{$item->name}}" class="pc__img"></a>
                           @endforeach
                     </div>
@@ -398,7 +398,7 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ $item->category->name}}</p>
-                <h6 class="pc__title"><a href="details.html">{{ $item->name}}</a></h6>
+                <h6 class="pc__title"><a href="{{ route('shop.product.details',['product_slug' => $item->slug])}}">{{ $item->name}}</a></h6>
                 <div class="product-card__price d-flex">
                     
                   <span class="money price">@if($item->sale_price)
@@ -443,27 +443,12 @@
 
          
         </div>
+        <div class='divider'></div>
+        <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
+          {{$product->links('pagination::bootstrap-5')}}
+        </div>
 
-        <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
-          <a href="#" class="btn-link d-inline-flex align-items-center">
-            <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_prev_sm" />
-            </svg>
-            <span class="fw-medium">PREV</span>
-          </a>
-          <ul class="pagination mb-0">
-            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">2</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">3</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">4</a></li>
-          </ul>
-          <a href="#" class="btn-link d-inline-flex align-items-center">
-            <span class="fw-medium me-1">NEXT</span>
-            <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_next_sm" />
-            </svg>
-          </a>
-        </nav>
+       
       </div>
     </section>
   </main>
