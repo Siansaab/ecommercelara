@@ -44,4 +44,7 @@ Route::get('/shop', [Shopcontroler::class, 'index'])->name('shop.index');
 Route::get('/shop/{product_slug}', [Shopcontroler::class, 'product_details'])->name('shop.product.details');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'index'])->name('cart.add');
+Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('cart.add');
+Route::get('/cart/remove/{rowId}', [CartController::class, 'remove_from_cart'])->name('cart.remove'); // Remove item
+Route::put('/cart/deacrease-qty/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('cart.qty.decrease'); // Remove item
+Route::put('/cart/increase-qty/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('cart.qty.increase'); // Remove item8
