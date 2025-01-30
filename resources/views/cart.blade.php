@@ -57,8 +57,8 @@
                       <div class="shopping-cart__product-item__detail">
                         <h4>{{$item->name}}</h4>
                         <ul class="shopping-cart__product-item__options">
-                          <li>Color: Yellow</li>
-                          <li>Size: L</li>
+                          {{-- <li>Color: Yellow</li>
+                          <li>Size: L</li> --}}
                         </ul>
                       </div>
                     </td>
@@ -71,12 +71,14 @@
                         <form method="POST" action="{{ route('cart.qty.decrease', ['rowId' => $item->rowId]) }}">
                           @csrf
                           @method('PUT')
-                        <div class="qty-control__reduce">-</div>
+                       
+                        <button type="submit" class="qty-control__reduce" style="border: none;background: none;">-</button>
                       </form>
                         <form method="POST" action="{{route('cart.qty.increase',['rowId' => $item->rowId]) }}">
                           @csrf
                           @method('PUT')
-                        <div class="qty-control__increase">+</div>
+                          <button type="submit" class="qty-control__increase" style="border: none;background: none;">+</button>
+
                         </form>
                       </div>
                     </td>
@@ -106,7 +108,11 @@
               <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit"
                 value="APPLY COUPON">
             </form>
-            <button class="btn btn-light">UPDATE CART</button>
+            <form action="{{ route('cart.empty')}}" method="POST">
+              @csrf
+              @method('DELETE')
+            <button class="btn btn-light">Clear CART</button>
+            </form>
           </div>
         </div>
         <div class="shopping-cart__totals-wrapper">

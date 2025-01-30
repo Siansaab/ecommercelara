@@ -326,17 +326,13 @@
           </div>
 
           <div class="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
-            <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" aria-label="Sort Items"
-              name="total-number">
-              <option selected>Default Sorting</option>
-              <option value="1">Featured</option>
-              <option value="2">Best selling</option>
-              <option value="3">Alphabetically, A-Z</option>
-              <option value="3">Alphabetically, Z-A</option>
-              <option value="3">Price, low to high</option>
-              <option value="3">Price, high to low</option>
-              <option value="3">Date, old to new</option>
-              <option value="3">Date, new to old</option>
+            <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" aria-label="Page Size" id='pagesize' name="pagesize">
+               
+              <option value="12" {{ $size==12 ? 'selected' : ""}}>Show</option>
+              <option value="1" {{ $size==1 ? 'selected' : ""}}>1</option>
+              <option value="48" {{ $size==48 ? 'selected' : ""}}>48</option>
+              
+             
             </select>
 
             <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>

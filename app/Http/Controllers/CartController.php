@@ -45,12 +45,12 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Item removed from cart.');
     }
 
-    // // Clear the Entire Cart
-    // public function clear_cart()
-    // {
-    //     Cart::instance('cart')->destroy(); // Clear all items from the cart
-    //     return redirect()->back()->with('success', 'Cart cleared.');
-    // }
+    // Clear the Entire Cart
+    public function clear_cart()
+    {
+        Cart::instance('cart')->destroy(); // Clear all items from the cart
+        return redirect()->back()->with('success', 'Cart cleared.');
+    }
 
 
     public function increase_cart_quantity($rowId)
@@ -62,7 +62,7 @@ class CartController extends Controller
             Cart::instance('cart')->update($rowId, $qty);
         }
 
-        return response()->json(['success' => true, 'message' => 'Quantity increased']);
+        return redirect()->back()->with('success', 'Quality updated  cart.');
     }
 
     /**
@@ -77,6 +77,6 @@ class CartController extends Controller
             Cart::instance('cart')->update($rowId, $qty);
         }
 
-        return response()->json(['success' => true, 'message' => 'Quantity decreased']);
+        return redirect()->back()->with('success', 'Quality updated  cart.');
     }
 }
