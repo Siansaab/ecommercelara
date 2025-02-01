@@ -28,36 +28,19 @@
               aria-labelledby="accordion-heading-1" data-bs-parent="#categories-list">
               <div class="accordion-body px-0 pb-0 pt-3">
                 <ul class="list list-inline mb-0">
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Dresses</a>
+                  @foreach($categories as $category)
+                   <li class="list-item">
+                    <span class="menu-link py-1">
+                      <input type="checkbox" class="chk-category" name="categories" value="{{ $category->id}}"
+                      @if(in_array($category->id,explode(',',$f_categories))) checked="checked" @endif>
+                      {{$category->name}}
+                    </span>
+                    <span class="text-right float-end">
+                      {{$category->products->count()}}
+                    </span>
                   </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Shorts</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Sweatshirts</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Swimwear</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jackets</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">T-Shirts & Tops</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jeans</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Trousers</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Men</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jumpers & Cardigans</a>
-                  </li>
+                  @endforeach
+                   
                 </ul>
               </div>
             </div>
@@ -148,50 +131,21 @@
             <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
               aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
               <div class="search-field multi-select accordion-body px-0 pb-0">
-                <select class="d-none" multiple name="total-numbers-list">
-                  <option value="1">Adidas</option>
-                  <option value="2">Balmain</option>
-                  <option value="3">Balenciaga</option>
-                  <option value="4">Burberry</option>
-                  <option value="5">Kenzo</option>
-                  <option value="5">Givenchy</option>
-                  <option value="5">Zara</option>
-                </select>
-                <div class="search-field__input-wrapper mb-3">
-                  <input type="text" name="search_text"
-                    class="search-field__input form-control form-control-sm border-light border-2"
-                    placeholder="Search" />
-                </div>
-                <ul class="multi-select__list list-unstyled">
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Adidas</span>
-                    <span class="text-secondary">2</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Balmain</span>
-                    <span class="text-secondary">7</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Balenciaga</span>
-                    <span class="text-secondary">10</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Burberry</span>
-                    <span class="text-secondary">39</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Kenzo</span>
-                    <span class="text-secondary">95</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Givenchy</span>
-                    <span class="text-secondary">1092</span>
-                  </li>
-                  <li class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                    <span class="me-auto">Zara</span>
-                    <span class="text-secondary">48</span>
-                  </li>
-                </ul>
+                 <ul class="list list-inline mb-0 brand-list">
+                  @foreach($brands as $brand)
+                  <li class="list-item">
+                    <span class="menu-link py-1">
+                      <input type="checkbox" name="brands" value="{{$brand->id}}" class="chk-brand" 
+                      @if(in_array($brand->id,explode(',',$f_brands))) checked="checked" @endif>
+                      {{$brand->name}}
+                    </span>
+                    <span class="text-right float-end">
+                      {{$brand->products->count()}}
+                    </span>
+                  </li> 
+                  @endforeach
+                 </ul>
+                 
               </div>
             </div>
           </div>
@@ -326,14 +280,22 @@
           </div>
 
           <div class="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
-            <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" aria-label="Page Size" id='pagesize' name="pagesize">
-               
-              <option value="12" {{ $size==12 ? 'selected' : ""}}>Show</option>
-              <option value="1" {{ $size==1 ? 'selected' : ""}}>1</option>
-              <option value="48" {{ $size==48 ? 'selected' : ""}}>48</option>
-              
-             
-            </select>
+            <select  class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" 
+            aria-label="Page Size" id="pagesize" name="pagesize">
+              <option value="10" {{ $size == 10 ? 'selected' : '' }}>10</option>
+              <option value="20" {{ $size == 20 ? 'selected' : '' }}>20</option>
+              <option value="50" {{ $size == 50 ? 'selected' : '' }}>50</option>
+          </select>
+
+
+          <select  class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" 
+            aria-label="Page Size" id="orderby" name="orderby">
+            <option value="-1" {{ $order == -1 ? 'selected' : '' }}>Default</option>
+              <option value="1" {{ $order == 1 ? 'selected' : '' }}>Date new to old</option>
+              <option value="2" {{ $order == 2 ? 'selected' : '' }}>Date Old to New</option>
+              <option value="3" {{ $order == 3 ? 'selected' : '' }}>Price Low to High</option>
+              <option value="4" {{ $order == 4 ? 'selected' : '' }}>Price High to Low</option>
+          </select>
 
             <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
 
@@ -441,12 +403,63 @@
         </div>
         <div class='divider'></div>
         <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-          {{$product->links('pagination::bootstrap-5')}}
+          {{$product->withQueryString()->links('pagination::bootstrap-5')}}
         </div>
 
        
       </div>
     </section>
   </main>
+ 
 
+<form id="frnfilter" method="GET" action="{{ route('shop.index') }}">
+    <input type="hidden" name="page" value="{{ $product->currentPage() }}">
+    <input type="hidden" id="size" name="size" value="{{ $size }}">
+    <input type="hidden" id="order" name="order" value="{{ $order }}">
+    <input type="hidden" name="brands" id='hdnBrands'>
+    <input type="hidden" name="categories" id='hdnCategories'>
+</form>
 @endsection
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ensure jQuery is loaded -->
+
+<script>
+  $(document).ready(function () {
+      // Change event for page size selection
+      $("#pagesize").on("change", function () {
+          $("#size").val($(this).val());
+          $("#frnfilter").submit();
+      });
+
+      // Change event for sorting order
+      $("#orderby").on("change", function () {
+          $("#order").val($(this).val());
+          $("#frnfilter").submit();
+      });
+
+      // Brand filter change event
+      $("input[name='brands']").on("change", function () {
+          let selectedBrands = $("input[name='brands']:checked").map(function () {
+              return $(this).val();
+          }).get().join(",");
+
+          $("#hdnBrands").val(selectedBrands);
+          $("#frnfilter").submit(); // Fix: Properly submit form
+      });
+
+
+
+      // Brand filter change event
+      $("input[name='categories']").on("change", function () {
+          let selectedBrands = $("input[name='categories']:checked").map(function () {
+              return $(this).val();
+          }).get().join(",");
+
+          $("#hdnCategories").val(selectedBrands);
+          $("#frnfilter").submit(); // Fix: Properly submit form
+      });
+
+
+  });
+</script>
+@endpush
