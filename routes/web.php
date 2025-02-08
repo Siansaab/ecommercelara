@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Shopcontroler;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\authadmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,14 @@ Route::middleware(['auth',authadmin::class])->group(function(){
     Route::get('/admin/products/edit/{id}', [AdminController::class, 'product_edit'])->name('admin.product.edit');
     Route::put('/admin/products/update/', [AdminController::class, 'product_update'])->name('admin.product.update');
     Route::delete('/admin/products/{id}/delete', [AdminController::class, 'product_delete'])->name('admin.product.delete');
-    //products
+    //coupans
+    Route::get('/admin/coupans', [AdminController::class, 'coupans'])->name('admin.coupans');
+Route::get('/admin/coupans/add', [AdminController::class, 'coupans_add'])->name('admin.coupans-add');
+Route::post('/admin/coupans/store/', [AdminController::class, 'coupans_store'])->name('admin.coupans.store');
+Route::get('/admin/coupans/edit/{id}', [AdminController::class, 'coupans_edit'])->name('admin.coupans.edit');
+Route::put('/admin/coupans/update/', [AdminController::class, 'coupans_update'])->name('admin.coupans.update');
+Route::delete('/admin/coupans/{id}/delete', [AdminController::class, 'coupans_delete'])->name('admin.coupans.delete');
+
 });
 
 
@@ -49,3 +57,13 @@ Route::get('/cart/remove/{rowId}', [CartController::class, 'remove_from_cart'])-
 Route::delete('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.empty'); // Remove item
 Route::put('/cart/deacrease-qty/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('cart.qty.decrease'); // Remove item
 Route::put('/cart/increase-qty/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('cart.qty.increase'); // Remove item8
+Route::post('/cart/apply-coupon', [CartController::class, 'apply_coupan_code'])->name('cart.coupon.apply'); // Remove item8
+Route::delete('/cart/remove-coupans', [CartController::class, 'remove_coupon_cart'])->name('cart.coupans.remove');
+
+//wishlist
+Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::get('/wishlist/remove/{rowId}', [WishlistController::class, 'remove_from_wishlist'])->name('wishlist.remove'); // Remove item
+Route::post('/wishlist/move-to-cart/{rowId}', [WishlistController::class, 'move_to_cart'])->name('wishlist.move.to.cart');
+
+//Coupan

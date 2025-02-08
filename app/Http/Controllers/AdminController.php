@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Coupan;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -454,9 +455,88 @@ public function product_delete($id)
     return redirect()->route('admin.products')->with('status', 'Product has been delete successfully');                                                                        
 }
 
+    public function coupans(){
+        $coupans = Coupan::orderBy('expiry_date', 'DESC')->paginate(10);
+        return view('admin.coupans',compact('coupans'));
+    }
 
 
+    public function coupans_add()
+    {
+        return view('admin.coupans-add');
+    }
+
+
+    public function coupans_store(Request $request)
+    {
+        $request->validate(
+            [
+                'code' => 'required',
+                'type' => 'required',
+                'value' => 'required|numeric',
+                'cart_value' => 'required|numeric',
+                'expiry_date' => 'required|date'
+                
+            ]
+        );
+
+        $coupan = new Coupan();
+        $coupan->code = $request->code;
+        $coupan->type = $request->type;
+        $coupan->value = $request->value;
+        $coupan->cart_value = $request->cart_value;
+        $coupan->expiry_date = $request->expiry_date;
+
+       
+
+        // Save the brand
+        $coupan->save();
+
+        return redirect()->route('admin.coupans')->with('status', 'coupan added successfully');
+    }
+
+    public function coupans_edit($id)
+    {
+        $coupan = Coupan::findOrFail($id);
+        return view('admin.coupans-edit', compact('coupan'));
+    }
     
+
+    public function coupans_update(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate(
+            [
+                'code' => 'required',
+                'type' => 'required',
+                'value' => 'required|numeric',
+                'cart_value' => 'required|numeric',
+                'expiry_date' => 'required|date'
+                
+            ]
+            );
+    
+        $coupan = Coupan::findOrFail($request->id);  
+
+        $coupan->code     =        $request->code;
+        $coupan->type     =        $request->type;
+        $coupan->value    =       $request->value;
+        $coupan->cart_value =  $request->cart_value;
+        $coupan->expiry_date = $request->expiry_date;
+       
+        $coupan->save();
+    
+        // Redirect with a success message
+        return redirect()->route('admin.coupans')->with('status', 'coupans updated successfully');
+    }
+
+    public function coupans_delete($id){
+        $Coupans = Coupan::findOrFail($id); 
+      
+        $Coupans->delete();
+        return redirect()->route('admin.coupans')->with("error",'coupans has been Delete Successfully');
+
+    }
 }
 
 

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupan;
 use Illuminate\Http\Request;
 use Surfsidemedia\Shoppingcart\Facades\Cart;
 use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\where;
+
 
 class CartController extends Controller
 {
@@ -79,4 +84,71 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Quality updated  cart.');
     }
+
+    public function apply_coupan_code(Request $request)
+    {
+        $coupon_code = $request->coupon_code;
+    
+        if (isset($coupon_code)) {
+            $coupon = Coupan::where('code', $coupon_code)
+                ->where('expiry_date', '>=', Carbon::today())
+                ->where('cart_value', '<=', Cart::instance('cart')->subtotal())
+                ->first();
+    
+            if (!$coupon) { // Fix the logic here
+                return redirect()->back()->with('error', 'Invalid Coupon Code');
+            } else {
+                Session::put('coupon', [
+                    'code' => $coupon->code,
+                    'type' => $coupon->type,
+                    'value' => $coupon->value,
+                    'cart_value' => $coupon->cart_value
+                ]);
+    
+                $this->calculateDiscount();
+    
+                return redirect()->back()->with('success', 'Coupon has been applied successfully!');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Please enter a valid coupon code.');
+        }
+    }
+    
+
+    public function calculateDiscount()
+    {
+        $discount = 0;
+        if(Session::has('coupon')){
+            if(Session::get('coupon')['type'] == 'fixed')
+            {
+                $discount = Session::get('coupon')['value'];
+            }
+            else{
+                $discount = (Cart::instance('cart')->subtotal() * Session::get('coupon')['value'])/100;
+            }
+
+            $subtotalafterdicount = Cart::instance('cart')->subtotal() -  $discount;
+            $taxAfterDiscount = ($subtotalafterdicount * config('cart.tax'))/100;
+            $totalAfterDiscount = $subtotalafterdicount+$taxAfterDiscount;
+            
+            Session::put('discounts',[
+
+                'discount' => number_format(floatval($discount),2,'.',''),
+                'subtotal' => number_format(floatval($subtotalafterdicount),2,'.',''),
+                'tax' => number_format(floatval($taxAfterDiscount),2,'.',''),
+                'total' => number_format(floatval($totalAfterDiscount),2,'.','')
+
+            ]);
+        }
+
+    }
+
+    public function remove_coupon_cart()
+    {
+        Session::forget('coupon');
+        Session::forget('discounts');
+        return back()->with('error','Coupon has been removed');
+    }
+        
+     
 }

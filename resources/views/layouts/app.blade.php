@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
     crossorigin="anonymous" referrerpolicy="no-referrer">
+    
     @stack("styles")
     <base href="{{ url('/') }}/">
 </head>
@@ -260,6 +261,9 @@
     .logo__image {
       max-width: 220px;
     }
+    .filled-heart{
+      color: orange;
+    }
   </style>
   <div class="header-mobile header_sticky">
     <div class="container d-flex align-items-center h-100">
@@ -486,10 +490,14 @@
 
           @endguest
 
-          <a href="wishlist.html" class="header-tools__item">
+          <a href="{{route('wishlist.index')}}" class="header-tools__item  header-tools__cart" >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <use href="#icon_heart" />
+              
             </svg>
+            @if(Cart::instance('wishlist')->content()->count() > 0)
+            <span class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('wishlist')->content()->count()}}</span>
+            @endif
           </a>
 
           <a href="{{route('cart.index')}}" class="header-tools__item header-tools__cart">
@@ -659,7 +667,9 @@
               xmlns="http://www.w3.org/2000/svg">
               <use href="#icon_heart" />
             </svg>
-            <span class="wishlist-amount d-block position-absolute js-wishlist-count">3</span>
+            @if(Cart::instance('wishlist')->content()->count() > 0)
+            <span class="wishlist-amount d-block position-absolute js-wishlist-count">{{Cart::instance('wishlist')->content()->count()}}</span>
+            @endif
           </div>
           <span>Wishlist</span>
         </a>
